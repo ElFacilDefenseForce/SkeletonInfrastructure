@@ -1,0 +1,5 @@
+/* style.css */
+/* Basic styles for layout */
+nav, main {
+    padding: 1rem;
+}
