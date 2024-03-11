@@ -22,7 +22,7 @@ data "aws_ami" "jenkins_ami" {
 resource "aws_instance" "jenkins_instance" {
   ami           = data.aws_ami.jenkins_ami.id
   instance_type = "c4.large"
-  key_name      = var.key_name
+  key_name      = "Shadrach"
 
   tags = {
     Name = "Greenhill"
