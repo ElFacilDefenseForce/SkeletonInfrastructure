@@ -29,5 +29,5 @@ jobs:
         run: terraform apply -auto-approve
         working-directory: ./terraform
         env:
-          AWS_ACCESS_KEY_ID_GREENHILL: ${{ secrets.GreenhillAccessID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.GreenhillAccessKey }}
+          AWS_ACCESS_KEY_ID_GREENHILL: ${{ secrets.GREENHILLACCESSID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.GREENHILLACCESSKEY }}
