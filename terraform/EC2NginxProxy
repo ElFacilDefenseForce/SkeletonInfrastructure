@@ -31,7 +31,7 @@ data "aws_ami" "nginx_ami" {
 
 resource "aws_instance" "nginx_instance" {
   ami           = data.aws_ami.nginx_ami.id
-  instance_type = "t3.small"
+  instance_type = "t3.micro"
   key_name      = "Shadrach"
   security_groups = [aws_security_group.nginx_sg.name]
 
