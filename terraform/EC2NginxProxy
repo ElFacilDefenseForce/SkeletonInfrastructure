@@ -36,23 +36,44 @@ resource "aws_instance" "nginx_instance" {
   security_groups = [aws_security_group.nginx_sg.name]
 
   user_data = <<-EOF
-              #!/bin/bash
-              sudo apt update
-              sudo apt install -y nginx
-              cat <<EOT > /etc/nginx/sites-available/default
-              server {
-                  listen 80;
-                  location / {
-                      proxy_pass http://your_jenkins_instance_private_ip:8080;
-                      proxy_set_header Host \$host;
-                      proxy_set_header X-Real-IP \$remote_addr;
-                      proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-                      proxy_set_header X-Forwarded-Proto \$scheme;
-                  }
-              }
-              EOT
-              sudo systemctl restart nginx
-              EOF
+    #!/bin/bash
+    sudo apt update
+    sudo apt install -y nginx
+    cat <<EOT > /etc/nginx/sites-available/default
+# Personal Web Site Server Block
+    server {
+      listen 80;
+      server_name www.derektank.com derektank.com;
+      location / {
+        proxy_pass http://44.213.132.37;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
+      }
+    }
+/* Taiga Web App Server Block
+    server {
+      listen 80;
+      server_name taiga.derektank.com;
+      location / {
+        proxy_pass http://<Another-EC2-Instance-IP>;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
+      }
+    }
+*/
+    server {
+      listen 80;
+      server_name derektank.com;
+      return 301 http://www.derektank.com$request_uri;
+    }
+    EOT
+    sudo systemctl restart nginx
+    EOF
+
 
   tags = {
     Name = "NGINXProxy"
