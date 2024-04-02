@@ -38,7 +38,6 @@ resource "aws_instance" "nginx_instance" {
   ami           = data.aws_ami.nginx_ami.id
   instance_type = "t3.micro"
   key_name      = "Shadrach"
-  security_groups = [aws_security_group.nginx_sg.name]
   iam_instance_profile = aws_iam_instance_profile.ssl_cert_access_profile.name
 
 
@@ -47,13 +46,35 @@ resource "aws_instance" "nginx_instance" {
     sudo apt update
     sudo apt install -y nginx
     sudo apt-get install -y awscli jq
+    mkdir -p /etc/nginx/ssl/derektank.com
     aws secretsmanager get-secret-value --secret-id derektank.com_SSL --region us-west-2 --query SecretString --output text | jq -r .certificate > /etc/nginx/ssl/fullchain.pem
     aws secretsmanager get-secret-value --secret-id derektank.com_SSL --region us-west-2 --query SecretString --output text | jq -r .privateKey > /etc/nginx/ssl/privkey.pem
+    chmod 600 /etc/nginx/ssl/derektank.com/*
     cat <<EOT > /etc/nginx/sites-available/default
-# Personal Web Site Server Block
+    # Port 80 Redirect
     server {
       listen 80;
+      server_name www.derektank.com derektank.com taiga.derektank.com;
+      return 301 https://\$host\$request_uri;
+    }
+    # Redirect derektank.com to www.derektank.com for HTTPS
+    server {
+      listen 443 ssl;
+      server_name derektank.com;
+    
+      ssl_certificate /etc/nginx/ssl/derektank.com/fullchain.pem;
+      ssl_certificate_key /etc/nginx/ssl/derektank.com/privkey.pem;
+    
+      return 301 https://www.derektank.com\$request_uri;
+    }
+    # Personal Web Site Server Block
+    server {
+      listen 443 ssl;
       server_name www.derektank.com derektank.com;
+  
+      ssl_certificate /etc/nginx/ssl/derektank.com/fullchain.pem;
+      ssl_certificate_key /etc/nginx/ssl/derektank.com/privkey.pem;
+  
       location / {
         proxy_pass http://44.213.132.37;
         proxy_set_header Host \$host;
@@ -62,24 +83,24 @@ resource "aws_instance" "nginx_instance" {
         proxy_set_header X-Forwarded-Proto \$scheme;
       }
     }
-#/* Taiga Web App Server Block
-#    server {
-#      listen 80;
-#      server_name taiga.derektank.com;
-#      location / {
-#        proxy_pass http://<Another-EC2-Instance-IP>;
-#        proxy_set_header Host \$host;
-#        proxy_set_header X-Real-IP \$remote_addr;
-#        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-#        proxy_set_header X-Forwarded-Proto \$scheme;
-#      }
-#    }
-#*/
-    server {
-      listen 80;
-      server_name derektank.com;
-      return 301 http://www.derektank.com$request_uri;
-    }
+
+    #/* Taiga Web App Server Block
+    #    server {
+    #      listen 443 ssl;
+    #      server_name taiga.derektank.com;
+    #  
+    #      ssl_certificate /etc/nginx/ssl/derektank.com/fullchain.pem;
+    #      ssl_certificate_key /etc/nginx/ssl/derektank.com/privkey.pem;
+    #  
+    #      location / {
+    #        proxy_pass http://<Another-EC2-Instance-IP>;
+    #        proxy_set_header Host \$host;
+    #        proxy_set_header X-Real-IP \$remote_addr;
+    #        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+    #        proxy_set_header X-Forwarded-Proto \$scheme;
+    #      }
+    #    }
+    #*/
     EOT
     sudo systemctl restart nginx
     EOF
