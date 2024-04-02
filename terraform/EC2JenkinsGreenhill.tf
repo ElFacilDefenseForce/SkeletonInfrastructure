@@ -16,7 +16,7 @@ data "aws_ami" "jenkins_ami" {
 
   filter {
     name   = "name"
-    values = ["(SupportedImages) - Jenkins - Ubuntu 22 x86_64*"]
+    values = ["*(SupportedImages) - Jenkins - Ubuntu 22 x86_64*"]
   }
 
   filter {
