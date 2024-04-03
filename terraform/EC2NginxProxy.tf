@@ -18,7 +18,7 @@ data "aws_ami" "nginx_ami" {
 
   filter {
     name   = "name"
-    values = ["nginx-app-protect-dos-ubuntu-22.04-v1.2-x86_64*"]
+    values = ["*NGINX on Ubuntu Server 22.04 with Support by cloudimg*"]
   }
 
   filter {
@@ -43,7 +43,7 @@ resource "aws_instance" "nginx_instance" {
   user_data = <<-EOF
     #!/bin/bash
     sudo apt update
-    sudo apt install -y nginx
+    sudo apt-get install -y nginx
     sudo apt-get install -y awscli jq
     mkdir -p /etc/nginx/ssl/derektank.com
     aws secretsmanager get-secret-value --secret-id derektank.com_SSL --region us-west-2 --query SecretString --output text | jq -r .certificate > /etc/nginx/ssl/fullchain.pem
