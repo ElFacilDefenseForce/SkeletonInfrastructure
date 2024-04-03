@@ -38,8 +38,7 @@ resource "aws_instance" "nginx_instance" {
   ami           = data.aws_ami.nginx_ami.id
   instance_type = "t3.micro"
   key_name      = "Shadrach"
-  iam_instance_profile = aws_iam_instance_profile.ssl_cert_access_profile.name
-
+  iam_instance_profile = data.aws_iam_instance_profile.ssl_cert_access_profile.name
 
   user_data = <<-EOF
     #!/bin/bash
