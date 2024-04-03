@@ -29,10 +29,10 @@ data "aws_ami" "nginx_ami" {
   owners = ["aws-marketplace"]
 }
 
-resource "aws_iam_instance_profile" "ssl_cert_access_profile" {
+data "aws_iam_instance_profile" "ssl_cert_access_profile" {
   name = "SSLCertAccessProfile"
-  role = "SSLCertAccess"
 }
+
 
 resource "aws_instance" "nginx_instance" {
   ami           = data.aws_ami.nginx_ami.id
