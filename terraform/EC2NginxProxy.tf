@@ -30,7 +30,7 @@ data "aws_ami" "nginx_ami" {
 }
 
 data "aws_iam_instance_profile" "ssl_cert_access_profile" {
-  name = "SSLCertAccessProfile"
+  name = "SSLCertAccess"
 }
 
 
