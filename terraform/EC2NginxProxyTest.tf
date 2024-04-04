@@ -18,7 +18,7 @@ data "aws_ami" "nginx_ami" {
 
   filter {
     name   = "name"
-    values = ["*Ubuntu Server 22.04 LTS (HVM), SSD Volume Type*"]
+    values = ["*Ubuntu Server 22.04 LTS (HVM)*"]
   }
 
   filter {
