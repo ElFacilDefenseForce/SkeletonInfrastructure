@@ -18,7 +18,7 @@ data "aws_ami" "nginx_ami" {
 
   filter {
     name   = "name"
-    values = ["*cloudimg-nginx-ubuntu-server2204v1.0.0-27-09-2023-104569e0-3ced-43b1-a24b-b4fa278d0377*"]
+    values = ["*Ubuntu Server 22.04 LTS (HVM), SSD Volume Type*"]
   }
 
   filter {
