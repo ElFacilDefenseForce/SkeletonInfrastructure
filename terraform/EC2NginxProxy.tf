@@ -39,6 +39,7 @@ resource "aws_instance" "nginx_instance" {
   instance_type = "t3.micro"
   key_name      = "Shadrach"
   iam_instance_profile = data.aws_iam_instance_profile.ssl_cert_access_profile.name
+  vpc_security_group_ids  = ["sg-09996be9bf1979f6c"]
 
   user_data = <<-EOF
     #!/bin/bash
