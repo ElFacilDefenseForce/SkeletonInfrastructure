@@ -1,5 +1,6 @@
 #!/bin/bash
-apt update
+set -e
+apt-get update
 apt-get install -y nginx
 systemctl start nginx
 systemctl enable nginx
@@ -62,4 +63,5 @@ server {
 #*/
 EOT
 
+nginx -t
 sudo systemctl restart nginx
