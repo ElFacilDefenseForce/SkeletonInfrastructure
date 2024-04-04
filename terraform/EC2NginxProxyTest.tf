@@ -18,7 +18,7 @@ data "aws_ami" "nginx_ami" {
 
   filter {
     name   = "name"
-    values = ["*Ubuntu Server 22.04 LTS (HVM)*"]
+    values = ["*ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20240301*"]
   }
 
   filter {
