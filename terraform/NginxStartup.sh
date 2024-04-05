@@ -7,8 +7,8 @@ systemctl enable nginx
 apt-get install -y awscli jq
 
 mkdir -p /etc/nginx/ssl/derektank.com
-aws secretsmanager get-secret-value --secret-id derektank.com_SSL --region us-west-2 --query SecretString --output text | jq -r .certificate > /etc/nginx/ssl/derektank.com/fullchain.pem
-aws secretsmanager get-secret-value --secret-id derektank.com_SSL --region us-west-2 --query SecretString --output text | jq -r .privateKey > /etc/nginx/ssl/derektank.com/privkey.pem
+aws secretsmanager get-secret-value --secret-id derektank.com_SSL --region us-west-2 --query SecretString --output text | jq -r .NGINXSSLCert > /etc/nginx/ssl/derektank.com/fullchain.pem
+aws secretsmanager get-secret-value --secret-id derektank.com_SSL --region us-west-2 --query SecretString --output text | jq -r .NGINXSSLPrivkey > /etc/nginx/ssl/derektank.com/privkey.pem
 chmod 600 /etc/nginx/ssl/derektank.com/*
 
 cat <<EOT > /etc/nginx/sites-available/default
