@@ -44,23 +44,22 @@ server {
     proxy_set_header X-Forwarded-Proto \$scheme;
   }
 }
-#/* Taiga Web App Server Block
-#    server {
-#      listen 443 ssl;
-#      server_name taiga.derektank.com;
-#  
-#      ssl_certificate /etc/nginx/ssl/derektank.com/fullchain.pem;
-#      ssl_certificate_key /etc/nginx/ssl/derektank.com/privkey.pem;
-#  
-#      location / {
-#        proxy_pass http://<Another-EC2-Instance-IP>;
-#        proxy_set_header Host \$host;
-#        proxy_set_header X-Real-IP \$remote_addr;
-#        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-#        proxy_set_header X-Forwarded-Proto \$scheme;
-#      }
-#    }
-#*/
+# Taiga Web App Server Block
+    server {
+      listen 443 ssl;
+      server_name taiga.derektank.com;
+  
+      ssl_certificate /etc/nginx/ssl/derektank.com/fullchain.pem;
+      ssl_certificate_key /etc/nginx/ssl/derektank.com/privkey.pem;
+  
+      location / {
+        proxy_pass http://<Another-EC2-Instance-IP>;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
+      }
+    }
 EOT
 
 nginx -t
