@@ -30,7 +30,7 @@ data "aws_ami" "nginx_ami" {
 }
 
 resource "aws_iam_instance_profile" "ssl_cert_access_profile" {
-  name = "SSLCertAccessProfile"
+  name = "SSLCertAccessInstanceProfile"
   role = "SSLCertAccess" 
 }
 
