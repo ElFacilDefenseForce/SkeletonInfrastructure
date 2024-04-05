@@ -29,16 +29,15 @@ data "aws_ami" "nginx_ami" {
   owners = ["aws-marketplace"]
 }
 
-resource "aws_iam_instance_profile" "ssl_cert_access_profile" {
+data "aws_iam_instance_profile" "ssl_cert_access_profile" {
   name = "SSLCertsAccessInstanceProfile"
-  role = "SSLCertsAccess" 
 }
 
 resource "aws_instance" "nginx_instance" {
   ami           = data.aws_ami.nginx_ami.id
   instance_type = "t3.micro"
   key_name      = "Shadrach"
-  iam_instance_profile = aws_iam_instance_profile.ssl_cert_access_profile.name
+  iam_instance_profile = data.aws_iam_instance_profile.ssl_cert_access_profile.name
   vpc_security_group_ids  = ["sg-09996be9bf1979f6c"]
 
   user_data = file("${path.module}/NginxStartup.sh")
