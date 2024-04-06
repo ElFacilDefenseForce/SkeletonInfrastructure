@@ -35,7 +35,7 @@ server {
     ssl_certificate_key /etc/nginx/ssl/derektank.com/privkey.pem;
 
     location / {
-        proxy_pass http://ec2-44-213-132-37.compute-1.amazonaws.com;
+        proxy_pass https://ec2-44-213-132-37.compute-1.amazonaws.com;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -52,7 +52,7 @@ server {
     ssl_certificate_key /etc/nginx/ssl/derektank.com/privkey.pem;
 
     location / {
-        proxy_pass http://8.8.8.8;
+        proxy_pass https://8.8.8.8;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
