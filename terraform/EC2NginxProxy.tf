@@ -4,7 +4,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 3.0"
+      version = "~> 4.0"
     }
   }
 }
@@ -45,6 +45,11 @@ resource "aws_instance" "nginx_instance" {
   tags = {
     Name = "NGINXProxy"
   }
+}
+
+resource "aws_eip_association" "eip_assoc" {
+  instance_id   = aws_instance.nginx_instance.id
+  allocation_id = "eipalloc-05238584796345de8"
 }
 
 output "nginx_instance_ip" {
