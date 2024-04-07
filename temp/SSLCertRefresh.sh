@@ -6,9 +6,10 @@ certbot certonly --manual --preferred-challenges=dns -d *.derektank.com -d derek
 
 #Pause and wait command (or call out to google checker) to press enter only after DNS records have proliferated
 
+#Below Commands replace newline characters with \\n escape characters. Can be called with below command
+# aws secretsmanager get-secret-value --secret-id derektank.com_SSL --region us-west-2 --query SecretString --output text | jq -r '.NGINXSSLCert | gsub("\\\\n";"\n")' > ~/derektank.com/fullchain.pem
 FULLCHAIN=$(awk 'NF {sub(/\r/, ""); printf "%s\\n",$0;}' ~/fullchain.pem) #Requires update to filepath
 PRIVKEY=$(awk 'NF {sub(/\r/, ""); printf "%s\\n",$0;}' ~/privkey.pem)
-
 jq -n --arg cert "$FULLCHAIN" --arg key "$PRIVKEY" '{"NGINXSSLCert": $cert, "NGINXSSLPrivkey": $key}' > ~/secret.json
 
 aws secretsmanager update-secret --secret-id derektank.com_SSL --region us-west-2 --secret-string file://~/secret.json
