@@ -7,8 +7,8 @@ systemctl enable nginx
 apt-get install -y awscli jq
 
 mkdir -p /etc/nginx/ssl/derektank.com
-aws secretsmanager get-secret-value --secret-id derektank.com_SSL --region us-west-2 --query SecretString --output text | jq -r .NGINXSSLCert > /etc/nginx/ssl/derektank.com/fullchain.pem
-aws secretsmanager get-secret-value --secret-id derektank.com_SSL --region us-west-2 --query SecretString --output text | jq -r .NGINXSSLPrivkey > /etc/nginx/ssl/derektank.com/privkey.pem
+aws secretsmanager get-secret-value --secret-id derektank.com_SSL --region us-west-2 --query SecretString --output text | jq -r '.NGINXSSLCert | gsub("\\\\n";"\n")' > /etc/nginx/ssl/derektank.com/fullchain.pem
+aws secretsmanager get-secret-value --secret-id derektank.com_SSL --region us-west-2 --query SecretString --output text | jq -r '.NGINXSSLPrivkey | gsub("\\\\n";"\n")' > /etc/nginx/ssl/derektank.com/privkey.pem
 chmod 600 /etc/nginx/ssl/derektank.com/*
 
 cat <<EOT > /etc/nginx/sites-available/default
@@ -52,7 +52,7 @@ server {
     ssl_certificate_key /etc/nginx/ssl/derektank.com/privkey.pem;
 
     location / {
-        proxy_pass https://8.8.8.8;
+        proxy_pass https://ec2-44-213-132-37.compute-1.amazonaws.com;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
