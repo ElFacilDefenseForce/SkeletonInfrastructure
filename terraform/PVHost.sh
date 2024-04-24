@@ -1,10 +1,21 @@
 #!/bin/bash
 set -e
 apt-get update
+apt-get install -y git
+apt-get install -y curl
+apt-get install -y awscli jq
+apt-get install -y python3.10 python3-pip python3.10-venv
+update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
+pip3 install poetry
+
+$PVDir = /opt/pet-vae
+git clone https://github.com/dthuff/pet-vae.git $PVDir
+cd $PVDir
+poetry install --no-root
+
 apt-get install -y nginx
 systemctl start nginx
 systemctl enable nginx
-apt-get install -y awscli jq
 
 NGINX_CONF="/etc/nginx/sites-available/default"
 echo "# Port 80 Redirect" > $NGINX_CONF
